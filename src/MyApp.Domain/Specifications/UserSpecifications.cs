@@ -10,6 +10,10 @@ namespace MyApp.Domain.Specifications
         {
             return new BaseSpecification<User>(x => x.EmailId == emailId && x.Password == password);
         }
+        public static BaseSpecification<User> GetUserById(Guid id)
+        {
+            return new BaseSpecification<User>(x=>x.Id == id);
+        }
 
         public static BaseSpecification<User> GetAllActiveUsersSpec()
         {

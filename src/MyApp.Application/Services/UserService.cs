@@ -8,6 +8,7 @@ using MyApp.Application.Models.DTOs;
 using MyApp.Application.Interfaces;
 using MyApp.Application.Core.Repositories;
 using MyApp.Application.Core.Services;
+using MyApp.Application.Models.Requests.UserRequest;
 
 namespace MyApp.Application.Services
 {
@@ -54,6 +55,23 @@ namespace MyApp.Application.Services
                 FirstName = user.FirstName,
                 LastName = user.LastName
             };
+        }
+
+        public async Task<SingleUser> GetUserById(Guid id)
+        {
+            var getUser = UserSpecifications.GetUserById(id);
+            var user = await _unitOfWork.Repository<User>().FirstOrDefaultAsync(getUser);
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+            return new SingleUser()
+            {
+                
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            };
+
         }
 
         public async Task<GetAllActiveUsersRes> GetAllActiveUsers()

@@ -1,4 +1,5 @@
 using MyApp.Application.Models.Requests;
+using MyApp.Application.Models.Requests.UserRequest;
 using MyApp.Application.Models.Responses;
 
 namespace MyApp.Application.Interfaces
@@ -10,5 +11,7 @@ namespace MyApp.Application.Interfaces
         Task<ValidateUserRes> ValidateUser(ValidateUserReq req);
 
         Task<GetAllActiveUsersRes> GetAllActiveUsers();
+
+        Task<SingleUser> GetUserById(Guid id);
     }
 }

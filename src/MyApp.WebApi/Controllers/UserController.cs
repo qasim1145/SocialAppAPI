@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyApp.Application.Interfaces;
 using MyApp.Application.Models.Requests;
+using MyApp.Application.Models.Requests.UserRequest;
 using MyApp.Application.Models.Responses;
 
 namespace MyApp.WebApi.Controllers
@@ -34,6 +35,12 @@ namespace MyApp.WebApi.Controllers
         public async Task<ActionResult<GetAllActiveUsersRes>> GetAllActiveUsers()
         {
             var result = await _userService.GetAllActiveUsers();
+            return Ok(result);
+        }
+        [HttpGet("id")]
+        public async Task<ActionResult<SingleUser>> GetSingleUser(Guid id)
+        {
+            var result = await _userService.GetUserById(id);
             return Ok(result);
         }
     }
