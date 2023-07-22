@@ -1,5 +1,4 @@
 using MyApp.Application.Models.Requests;
-using MyApp.Application.Models.Responses;
 using MyApp.Domain.Specifications;
 using MyApp.Domain.Entities;
 using MyApp.Domain.Enums;
@@ -8,7 +7,9 @@ using MyApp.Application.Models.DTOs;
 using MyApp.Application.Interfaces;
 using MyApp.Application.Core.Repositories;
 using MyApp.Application.Core.Services;
-using MyApp.Application.Models.Requests.UserRequest;
+using MyApp.Application.Models.Responses.UserResponse;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace MyApp.Application.Services
 {
@@ -16,6 +17,7 @@ namespace MyApp.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILoggerService _loggerService;
+      
 
         public UserService(IUnitOfWork unitOfWork, ILoggerService loggerService)
         {
@@ -25,39 +27,29 @@ namespace MyApp.Application.Services
 
         public async Task<CreateUserRes> CreateUser(CreateUserReq req)
         {
+            
+              using  var hmac = new HMACSHA512(); 
+            
+            
+            
             var user = await _unitOfWork.Repository<User>().AddAsync(new User
-            {
-                FirstName = req.FirstName,
-                LastName = req.LastName,
-                EmailId = req.EmailId,
-                Password = req.Password,
-                Status = req.Status
+            {   Email = req.Email,
+                UserName = req.UserName,
+                Password = hmac.ComputeHash(Encoding.UTF8.GetBytes(req.Password)),
+                PasswordSalt = hmac.Key
+              
             });
             await _unitOfWork.SaveChangesAsync();
             return new CreateUserRes() { Data = new UserDTO(user) };
         }
 
-        public async Task<ValidateUserRes> ValidateUser(ValidateUserReq req)
+       public async Task<bool> UserExist(string username)
         {
-            var validateUserSpec = UserSpecifications.GetUserByEmailAndPasswordSpec(req.EmailId, req.Password);
-            var user = await _unitOfWork.Repository<User>().FirstOrDefaultAsync(validateUserSpec);
-            if (user == null)
-            {
-                throw new UserNotFoundException();
-            }
-            if (user.Status != UserStatus.Active)
-            {
-                throw new UserIsNotActiveException();
-            }
-            return new ValidateUserRes()
-            {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName
-            };
+            var specification = UserSpecifications.GetUserByUsername(username);
+            return await _unitOfWork.Repository<User>().EntityExists(specification);
         }
 
-        public async Task<SingleUser> GetUserById(Guid id)
+        public async Task<GetSingleUseeRes> GetUserById(int id)
         {
             var getUser = UserSpecifications.GetUserById(id);
             var user = await _unitOfWork.Repository<User>().FirstOrDefaultAsync(getUser);
@@ -65,24 +57,27 @@ namespace MyApp.Application.Services
             {
                 throw new UserNotFoundException();
             }
-            return new SingleUser()
+            
+            return new GetSingleUseeRes()
             {
-                
-                FirstName = user.FirstName,
-                LastName = user.LastName
+                UserName = user.UserName
+        
+               
             };
 
         }
 
         public async Task<GetAllActiveUsersRes> GetAllActiveUsers()
         {
-            var activeUsersSpec = UserSpecifications.GetAllActiveUsersSpec();
-            var users = await _unitOfWork.Repository<User>().ListAsync(activeUsersSpec);
+            //var activeUsersSpec = UserSpecifications.GetAllActiveUsersSpec();
+            var users = await _unitOfWork.Repository<User>().ListAllAsync();
 
             return new GetAllActiveUsersRes()
             {
                 Data = users.Select(x => new UserDTO(x)).ToList()
             };
         }
+
+       
     }
 }

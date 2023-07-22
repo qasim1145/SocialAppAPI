@@ -1,5 +1,6 @@
 using MyApp.Domain.Core.Models;
 using MyApp.Domain.Core.Specifications;
+using System.Linq.Expressions;
 
 namespace MyApp.Application.Core.Repositories
 {
@@ -13,5 +14,6 @@ namespace MyApp.Application.Core.Repositories
         void Update(T entity);
         void Delete(T entity);
         Task<int> CountAsync(ISpecification<T> spec);
+        Task<bool> EntityExists(Expression<Func<T, bool>> predicate);
     }
 }

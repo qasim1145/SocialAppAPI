@@ -4,19 +4,17 @@ namespace MyApp.Application.Models.DTOs
 {
     public class UserDTO
     {
-        public Guid Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string EmailId { get; set; }
+        public int UserId { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
         public int Status { get; set; }
         public string StatusText { get; set; }
 
         public UserDTO(User user)
         {
-            Id = user.Id;
-            FirstName = user.FirstName;
-            LastName = user.LastName;
-            EmailId = user.EmailId;
+            UserId = user.UserId;
+            UserName = user.UserName;
+            Email = user.Email;
             Status = (int)user.Status;
             StatusText = user.Status.ToString();
         }

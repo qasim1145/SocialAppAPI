@@ -7,21 +7,16 @@ namespace MyApp.Application.Models.Requests
     {
         [Required]
         [MaxLength(50)]
-        public string FirstName { get; set; }
+        public string UserName { get; set; } 
 
+        [Required]
+        [MaxLength(100)]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; } 
         [Required]
         [MaxLength(50)]
-        public string LastName { get; set; }
-
-        [Required]
-        [MaxLength(50)]
-        public string EmailId { get; set; }
-
-        [Required]
-        [MaxLength(50)]
-        public string Password { get; set; }
-
-        [Required]
-        public UserStatus Status { get; set; }
+        [DataType(DataType.Password)]
+        public string Password { get; set; } 
+        
     }
 }

@@ -1,6 +1,6 @@
 using MyApp.Application.Models.DTOs;
 
-namespace MyApp.Application.Models.Responses
+namespace MyApp.Application.Models.Responses.UserResponse
 {
     public class GetAllActiveUsersRes
     {

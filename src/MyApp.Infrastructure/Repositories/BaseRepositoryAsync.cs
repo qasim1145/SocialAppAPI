@@ -3,6 +3,7 @@ using MyApp.Infrastructure.Data;
 using MyApp.Domain.Core.Specifications;
 using MyApp.Domain.Core.Models;
 using MyApp.Application.Core.Repositories;
+using System.Linq.Expressions;
 
 namespace MyApp.Infrastructure.Repositories
 {
@@ -44,6 +45,11 @@ namespace MyApp.Infrastructure.Repositories
         {
             await _dbContext.Set<T>().AddAsync(entity);
             return entity;
+        }
+
+        public async Task<bool> EntityExists(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbContext.Set<T>().AnyAsync(predicate);
         }
 
         public void Update(T entity)

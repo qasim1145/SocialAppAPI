@@ -1,6 +1,5 @@
 using MyApp.Application.Models.Requests;
-using MyApp.Application.Models.Requests.UserRequest;
-using MyApp.Application.Models.Responses;
+using MyApp.Application.Models.Responses.UserResponse;
 
 namespace MyApp.Application.Interfaces
 {
@@ -8,10 +7,10 @@ namespace MyApp.Application.Interfaces
     {
         Task<CreateUserRes> CreateUser(CreateUserReq req);
 
-        Task<ValidateUserRes> ValidateUser(ValidateUserReq req);
-
+        //Task<ValidateUserRes> ValidateUser(ValidateUserReq req);
+        Task<bool> UserExist(string username);
         Task<GetAllActiveUsersRes> GetAllActiveUsers();
 
-        Task<SingleUser> GetUserById(Guid id);
+        Task<GetSingleUseeRes> GetUserById(int id);
     }
 }
