@@ -2,8 +2,10 @@
 using MyApp.Application.Interfaces;
 using MyApp.Application.Models.DTOs;
 using MyApp.Application.Models.Requests;
+using MyApp.Application.Models.Requests.UserRequest;
 using MyApp.Application.Models.Responses;
 using MyApp.Application.Models.Responses.UserResponse;
+using MyApp.Domain.Exceptions;
 
 namespace MyApp.WebApi.Controllers
 {
@@ -18,7 +20,7 @@ namespace MyApp.WebApi.Controllers
             _userService = userService;
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<ActionResult<CreateUserRes>> CreateUser(CreateUserReq user)
 
         {
@@ -28,7 +30,7 @@ namespace MyApp.WebApi.Controllers
                 try
                 {
 
-                if (await CheckUserExist(user.UserName)) return BadRequest("Username is taken");
+                if (await CheckUserExist(user.UserName,user.Email)) return BadRequest("User Exist");
 
                 var result = await _userService.CreateUser(user);
 
@@ -54,9 +56,9 @@ namespace MyApp.WebApi.Controllers
                 }
             }
         
-        private async Task<bool> CheckUserExist(string username)
+        private async Task<bool> CheckUserExist(string username,string email)
         {
-            return await _userService.UserExist(username);
+            return await _userService.UserExist(username, email);
         }
         //[HttpPost]
         //public async Task<ActionResult<ValidateUserRes>> ValidateUser(ValidateUserReq req)
@@ -64,6 +66,28 @@ namespace MyApp.WebApi.Controllers
         //    var result = await _userService.ValidateUser(req);
         //    return Ok(result);
         //}
+
+        [HttpPost("login")]
+
+        public async Task<ActionResult<LoginUserResponse>> SignIn(LoginUserReq req)
+        {
+            var user =await _userService.LoginUser(req);
+
+            if (user.Email == null || user.UserName == null) {
+                var response = new ApiResponse()
+                {
+                    Success = true,
+                    Message = "User not found or invalid credentials",
+
+                };                      
+            }
+          
+            return Ok(new ApiResponse {
+                Success = true,
+                Message = "User logged in successfully",
+
+            });
+        }
 
         [HttpGet]
 

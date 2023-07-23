@@ -18,9 +18,14 @@ namespace MyApp.Domain.Specifications
         //    return new BaseSpecification<User>(x => x.Status == UserStatus.Active);
         //}
 
-        public static Expression<Func<User, bool>> GetUserByUsername(string username)
+        public static Expression<Func<User, bool>> GetUserByUsername(string username,string email)
         {
-            return user => user.UserName == username;
+            return user => user.UserName == username || user.Email == email;
         }
+        public static Expression<Func<User, bool>> CheckUserNameAndEmail(string credential)
+        {
+            return user => user.UserName == credential || user.Email == credential;
+        }
+
     }
 }

@@ -35,6 +35,10 @@ namespace MyApp.Infrastructure.Repositories
         {
             return await ApplySpecification(spec).FirstOrDefaultAsync();
         }
+        public async Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbContext.Set<T>().SingleOrDefaultAsync(predicate);
+        }
 
         public async Task<int> CountAsync(ISpecification<T> spec)
         {

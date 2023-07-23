@@ -10,9 +10,16 @@ namespace MyApp.Application.Models.Requests.UserRequest
     public class LoginUserReq
     {
         [Required]
-        public string UserName { get; set; }
+        public string Credential { get; set; }
         [Required]
-        public string Password { get; set; }
+
+        public string UserPassword { get; set; }
+
+
+
+
+
+
     }
     
 }
